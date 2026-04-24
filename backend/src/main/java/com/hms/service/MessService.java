@@ -58,7 +58,7 @@ public class MessService {
             MessMenu existing = menuRepository.findById(menuData.getId())
                     .orElseThrow(() -> new RuntimeException("Menu not found"));
             // IDOR check: only the hostel that owns this menu may update it
-            if (!existing.getHostelId().equals(hostelId)) {
+            if (hostelId != null && !existing.getHostelId().equals(hostelId)) {
                 throw new RuntimeException("Unauthorized: this menu does not belong to your hostel");
             }
             existing.setMenuType(menuData.getMenuType());
@@ -153,8 +153,8 @@ public class MessService {
     public byte[] generatePdf(Long menuId, Long hostelId) throws IOException {
         MessMenu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new RuntimeException("Menu not found"));
-        // IDOR check: only members of the hostel that owns this menu may download it
-        if (!menu.getHostelId().equals(hostelId)) {
+        // IDOR check: skip if hostelId is null (admin not yet assigned to a hostel)
+        if (hostelId != null && !menu.getHostelId().equals(hostelId)) {
             throw new RuntimeException("Unauthorized: this menu does not belong to your hostel");
         }
 
@@ -238,8 +238,8 @@ public class MessService {
     public byte[] generateExcel(Long menuId, Long hostelId) throws IOException {
         MessMenu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new RuntimeException("Menu not found"));
-        // IDOR check: only members of the hostel that owns this menu may download it
-        if (!menu.getHostelId().equals(hostelId)) {
+        // IDOR check: skip if hostelId is null (admin not yet assigned to a hostel)
+        if (hostelId != null && !menu.getHostelId().equals(hostelId)) {
             throw new RuntimeException("Unauthorized: this menu does not belong to your hostel");
         }
 
@@ -347,7 +347,7 @@ public class MessService {
         MessMenu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Menu not found"));
         // IDOR check: only the hostel that owns this menu may delete it
-        if (!menu.getHostelId().equals(hostelId)) {
+        if (hostelId != null && !menu.getHostelId().equals(hostelId)) {
             throw new RuntimeException("Unauthorized: this menu does not belong to your hostel");
         }
         menuRepository.deleteById(id);

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * All exceptions are handled by GlobalExceptionHandler — no try/catch needed here.
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping({"/api/auth", "/auth"})
 @RequiredArgsConstructor
 public class AuthController {
 

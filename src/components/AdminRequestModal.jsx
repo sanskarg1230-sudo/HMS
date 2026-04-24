@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import API from '../config/api';
 
 const COMMON_FIELDS = [
   { name: 'wardenName', label: 'Warden Name', type: 'text', placeholder: 'Rajesh Sharma' },
@@ -155,7 +156,7 @@ function AdminRequestModal({ isOpen, onClose }) {
         }));
       }
 
-      const res = await fetch('/api/admin-request', {
+      const res = await fetch(`${API}/admin-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

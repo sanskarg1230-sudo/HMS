@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
 import { api } from '../utils/api';
+import API from '../config/api';
 
-const LOGIN_URL = '/api/auth/login';
-const REGISTER_URL = '/api/auth/register';
+const LOGIN_URL = `${API}/auth/login`;
+const REGISTER_URL = `${API}/auth/register`;
 
 function Login() {
   const [searchParams] = useSearchParams();

@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ScrollReveal from '../components/ScrollReveal';
 import Footer from '../components/Footer';
+import API from '../config/api';
 
-const BASE = '/api';
+const BASE = API;
 
 const Badge = ({ status }) => {
   const colors = {

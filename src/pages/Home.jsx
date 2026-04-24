@@ -5,6 +5,7 @@ import AnimatedSection from '../components/AnimatedSection';
 import HomeSkeleton from '../components/HomeSkeleton';
 import ScrollReveal from '../components/ScrollReveal';
 import AdminRequestModal from '../components/AdminRequestModal';
+import API from '../config/api';
 
 const SUBJECTS = [
   'General Inquiry',
@@ -73,7 +74,7 @@ function Home() {
     setErrors({});
     setSubmitting(true);
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(`${API}/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

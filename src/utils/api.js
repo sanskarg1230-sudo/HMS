@@ -1,7 +1,6 @@
-// Shared API utility — attaches JWT token to every request automatically
-// BASE is relative so it works through the Vite proxy on any host/IP
+import API from '../config/api';
 
-const BASE = '/api';
+const BASE = API;
 
 const getToken = () => localStorage.getItem('hms_token');
 

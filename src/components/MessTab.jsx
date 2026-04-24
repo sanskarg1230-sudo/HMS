@@ -21,7 +21,7 @@ export default function MessTab({ toast, api }) {
   const loadMenu = async () => {
     try {
       setLoading(true);
-      const data = await api.get('/mess/menu');
+      const data = await api.get('/api/mess/menu');
       if (data) {
         setMenu(data);
         setMenuType(data.menuType);
@@ -76,7 +76,7 @@ export default function MessTab({ toast, api }) {
         items
       };
 
-      const res = await api.post('/mess/menu', payload);
+      const res = await api.post('/api/mess/menu', payload);
       setMenu(res);
       toast('Mess menu saved successfully!', 'success');
     } catch (err) {
@@ -89,7 +89,7 @@ export default function MessTab({ toast, api }) {
   const download = async (format) => {
     if (!menu?.id) return toast('Please save the menu first', 'warning');
     try {
-      const blob = await api.download(`/mess/menu/${menu.id}/${format}`);
+      const blob = await api.download(`/api/mess/menu/${menu.id}/${format}`);
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -106,7 +106,7 @@ export default function MessTab({ toast, api }) {
   const deleteMenu = async () => {
     if (!window.confirm('Delete this menu?')) return;
     try {
-      if (menu?.id) await api.delete(`/mess/menu/${menu.id}`);
+      if (menu?.id) await api.delete(`/api/mess/menu/${menu.id}`);
       setMenu(null);
       setGridData({});
       toast('Menu deleted', 'success');
@@ -124,7 +124,7 @@ export default function MessTab({ toast, api }) {
     
     try {
       setLoading(true);
-      const res = await api.upload('/mess/menu/import', formData);
+      const res = await api.upload('/api/mess/menu/import', formData);
       if (res.error) throw new Error(res.message);
       
       toast('Menu imported successfully!', 'success');

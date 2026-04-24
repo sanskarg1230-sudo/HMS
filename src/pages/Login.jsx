@@ -4,8 +4,8 @@ import ScrollReveal from '../components/ScrollReveal';
 import { api } from '../utils/api';
 import API from '../config/api';
 
-const LOGIN_URL = `${API}/auth/login`;
-const REGISTER_URL = `${API}/auth/register`;
+const LOGIN_URL = `${API}/api/auth/login`;
+const REGISTER_URL = `${API}/api/auth/register`;
 
 function Login() {
   const [searchParams] = useSearchParams();
@@ -24,7 +24,7 @@ function Login() {
     e.preventDefault();
     setForgotLoading(true);
     try {
-      const res = await api.post('/auth/forgot-password', { email: forgotEmail });
+      const res = await api.post('/api/auth/forgot-password', { email: forgotEmail });
       if (res.error) {
         setError(res.message);
       } else {

@@ -19,7 +19,7 @@ const ResetPassword = () => {
         setError('');
         
         try {
-            const res = await api.post('/auth/reset-password', { token, password });
+            const res = await api.post('/api/auth/reset-password', { token, password });
             if (res.error) {
                 setError(res.message);
             } else {

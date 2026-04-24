@@ -64,7 +64,7 @@ export default function BugReportModal({ userId, userEmail, role, pageUrl }) {
       formData.append('pageUrl', pageUrl || window.location.pathname);
       if (screenshot) formData.append('screenshot', screenshot);
 
-      const res = await api.upload('/bugs/report', formData);
+      const res = await api.upload('/api/bugs/report', formData);
       if (res.message && !res.error) {
         setSubmitted(true);
         setForm({ subject: 'Bug Report', description: '' });

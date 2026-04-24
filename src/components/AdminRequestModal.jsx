@@ -156,7 +156,7 @@ function AdminRequestModal({ isOpen, onClose }) {
         }));
       }
 
-      const res = await fetch(`${API}/admin-request`, {
+      const res = await fetch(`${API}/api/admin-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

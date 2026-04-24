@@ -33,8 +33,8 @@ function MyRoomTab() {
   const [notices, setNotices] = useState([]);
   
   useEffect(() => { 
-    api.get('/student/room').then(setData).catch(() => {}); 
-    api.get('/student/notices').then(setNotices).catch(() => {});
+    api.get('/api/student/room').then(setData).catch(() => {}); 
+    api.get('/api/student/notices').then(setNotices).catch(() => {});
   }, []);
 
   if (!data) return <EmptyState icon="bed" message="Loading room info..." />;
@@ -122,7 +122,7 @@ function MyRoomTab() {
 // ── My Fees Tab ────────────────────────────────────────────────────────────────
 function MyFeesTab() {
   const [fees, setFees] = useState([]);
-  useEffect(() => { api.get('/student/fees').then(setFees).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/student/fees').then(setFees).catch(() => {}); }, []);
 
   const totalDue = fees.filter(f => f.status === 'UNPAID').reduce((s, f) => s + f.amount, 0);
   const totalPaid = fees.filter(f => f.status === 'PAID').reduce((s, f) => s + f.amount, 0);
@@ -162,12 +162,12 @@ function ComplaintsTab({ toast }) {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => { load(); }, []);
-  const load = () => api.get('/student/complaints').then(setComplaints).catch(() => {});
+  const load = () => api.get('/api/student/complaints').then(setComplaints).catch(() => {});
 
   const submit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
-    const res = await api.post('/student/complaints', form);
+    const res = await api.post('/api/student/complaints', form);
     setSubmitting(false);
     if (res.id) { toast('Complaint submitted!', 'success'); setForm({ title: '', description: '' }); load(); }
     else toast('Failed to submit', 'error');
@@ -219,7 +219,7 @@ function ComplaintsTab({ toast }) {
 // ── Notices Tab ────────────────────────────────────────────────────────────────
 function NoticesTab() {
   const [notices, setNotices] = useState([]);
-  useEffect(() => { api.get('/student/notices').then(setNotices).catch(() => {}); }, []);
+  useEffect(() => { api.get('/api/student/notices').then(setNotices).catch(() => {}); }, []);
 
   return (
     <div>
@@ -320,30 +320,30 @@ function ProfileTab({ toast }) {
   const [submittingLeave, setSubmittingLeave] = useState(false);
 
   const loadFull = useCallback(() => {
-    api.get('/student/full-profile').then(p => {
+    api.get('/api/student/full-profile').then(p => {
       setFullProfile(p);
       setPersonal({ phone: p.phone||'', university: p.university||'', course: p.course||'', year: p.year||'', joinDate: p.joinDate||'' });
       setParents({ fatherName: p.fatherName||'', motherName: p.motherName||'', guardianName: p.guardianName||'', parentPhone: p.parentPhone||'', parentEmail: p.parentEmail||'', emergencyContact: p.emergencyContact||'' });
       setAddress({ addressLine: p.addressLine||'', city: p.city||'', state: p.state||'', country: p.country||'', pincode: p.pincode||'' });
       setMedical({ bloodGroup: p.bloodGroup||'', allergies: p.allergies||'', medicalConditions: p.medicalConditions||'', medications: p.medications||'', doctorContact: p.doctorContact||'', notes: p.medicalNotes||'' });
     }).catch(() => {});
-    api.get('/student/leave').then(d => { if (Array.isArray(d)) setLeaves(d); }).catch(() => {});
+    api.get('/api/student/leave').then(d => { if (Array.isArray(d)) setLeaves(d); }).catch(() => {});
   }, []);
 
   useEffect(() => {
-    api.get('/student/profile').then(p => { setProfile(p); setName(p.name); }).catch(() => {});
+    api.get('/api/student/profile').then(p => { setProfile(p); setName(p.name); }).catch(() => {});
     loadFull();
   }, [loadFull]);
 
   const saveName = async () => {
-    const res = await api.patch('/student/profile', { name });
+    const res = await api.patch('/api/student/profile', { name });
     if (res.id) { setProfile(res); setEditName(false); localStorage.setItem('hms_name', res.name); toast('Name updated!', 'success'); }
   };
 
   const changePassword = async (e) => {
     e.preventDefault(); setPwError('');
     if (pwForm.newPassword !== pwForm.confirm) { setPwError("Passwords don't match"); return; }
-    const res = await api.patch('/student/password', { oldPassword: pwForm.oldPassword, newPassword: pwForm.newPassword });
+    const res = await api.patch('/api/student/password', { oldPassword: pwForm.oldPassword, newPassword: pwForm.newPassword });
     if (res.message) { toast(res.message, 'success'); setPwForm({ oldPassword:'', newPassword:'', confirm:'' }); }
     else setPwError(res.error || 'Failed to change password');
   };
@@ -359,7 +359,7 @@ function ProfileTab({ toast }) {
   const submitLeave = async () => {
     if (!leaveForm.fromDate || !leaveForm.toDate || !leaveForm.reason) { toast('Fill all fields', 'error'); return; }
     setSubmittingLeave(true);
-    const res = await api.post('/student/leave/request', leaveForm).catch(() => ({ error: true }));
+    const res = await api.post('/api/student/leave/request', leaveForm).catch(() => ({ error: true }));
     setSubmittingLeave(false);
     if (res?.id) { toast('Leave request submitted!', 'success'); setLeaveForm({ fromDate:'',toDate:'',reason:'' }); loadFull(); }
     else toast('Submission failed', 'error');
@@ -428,7 +428,7 @@ function ProfileTab({ toast }) {
           <EditField label="Year" value={personal.year} onChange={v => setPersonal(p=>({...p,year:v}))} />
           <EditField label="Join Date" type="date" value={personal.joinDate} onChange={v => setPersonal(p=>({...p,joinDate:v}))} />
         </div>
-        <SaveSection loading={saving.personal} onClick={() => saveSection('personal', '/student/profile/personal', personal)} />
+        <SaveSection loading={saving.personal} onClick={() => saveSection('personal', '/api/student/profile/personal', personal)} />
       </ProfileSection>
 
       <ProfileSection title="Parent & Guardian Information" icon="family_restroom">
@@ -437,7 +437,7 @@ function ProfileTab({ toast }) {
             <EditField key={k} label={l} value={parents[k]} onChange={v => setParents(p=>({...p,[k]:v}))} />
           ))}
         </div>
-        <SaveSection loading={saving.parents} onClick={() => saveSection('parents', '/student/profile/parents', parents)} />
+        <SaveSection loading={saving.parents} onClick={() => saveSection('parents', '/api/student/profile/parents', parents)} />
       </ProfileSection>
 
       <ProfileSection title="Home Address" icon="home">
@@ -447,7 +447,7 @@ function ProfileTab({ toast }) {
             <EditField key={k} label={l} value={address[k]} onChange={v => setAddress(p=>({...p,[k]:v}))} />
           ))}
         </div>
-        <SaveSection loading={saving.address} onClick={() => saveSection('address', '/student/profile/address', address)} />
+        <SaveSection loading={saving.address} onClick={() => saveSection('address', '/api/student/profile/address', address)} />
       </ProfileSection>
 
       <ProfileSection title="Medical Information" icon="health_and_safety">
@@ -463,7 +463,7 @@ function ProfileTab({ toast }) {
               rows={2} placeholder={l} />
           </div>
         ))}
-        <SaveSection loading={saving.medical} onClick={() => saveSection('medical', '/student/profile/medical', medical)} />
+        <SaveSection loading={saving.medical} onClick={() => saveSection('medical', '/api/student/profile/medical', medical)} />
       </ProfileSection>
 
       {/* Leave Requests */}

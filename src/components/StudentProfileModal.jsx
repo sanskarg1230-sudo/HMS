@@ -135,7 +135,7 @@ function ParentsTab({ profile, studentId, toast }) {
 
   const save = async () => {
     setSaving(true);
-    const res = await api.patch(`/admin/students/${studentId}/profile/parents`, form).catch(() => ({ error: true }));
+    const res = await api.patch(`/api/admin/students/${studentId}/profile/parents`, form).catch(() => ({ error: true }));
     setSaving(false);
     toast(res?.error ? 'Save failed' : 'Parents info saved!', res?.error ? 'error' : 'success');
   };
@@ -174,7 +174,7 @@ function AddressTab({ profile, studentId, toast }) {
 
   const save = async () => {
     setSaving(true);
-    const res = await api.patch(`/admin/students/${studentId}/profile/address`, form).catch(() => ({ error: true }));
+    const res = await api.patch(`/api/admin/students/${studentId}/profile/address`, form).catch(() => ({ error: true }));
     setSaving(false);
     toast(res?.error ? 'Save failed' : 'Address saved!', res?.error ? 'error' : 'success');
   };
@@ -219,7 +219,7 @@ function MedicalTab({ profile, studentId, toast }) {
 
   const save = async () => {
     setSaving(true);
-    const res = await api.patch(`/admin/students/${studentId}/medical`, form).catch(() => ({ error: true }));
+    const res = await api.patch(`/api/admin/students/${studentId}/medical`, form).catch(() => ({ error: true }));
     setSaving(false);
     toast(res?.error ? 'Save failed' : 'Medical record saved!', res?.error ? 'error' : 'success');
   };
@@ -268,7 +268,7 @@ function LeaveTab({ studentId, toast }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api.get(`/admin/students/${studentId}/leave`)
+    api.get(`/api/admin/students/${studentId}/leave`)
       .then(d => { if (Array.isArray(d)) setLeaves(d); })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -279,14 +279,14 @@ function LeaveTab({ studentId, toast }) {
   const addLeave = async () => {
     if (!form.fromDate || !form.toDate || !form.reason) { toast('Fill all fields', 'error'); return; }
     setSaving(true);
-    const res = await api.post(`/admin/students/${studentId}/leave`, form).catch(() => ({ error: true }));
+    const res = await api.post(`/api/admin/students/${studentId}/leave`, form).catch(() => ({ error: true }));
     setSaving(false);
     if (res?.id) { toast('Leave record added!', 'success'); setShowForm(false); setForm({ fromDate:'',toDate:'',reason:'' }); load(); }
     else toast('Failed to add leave', 'error');
   };
 
   const actionLeave = async (leaveId, action) => {
-    const res = await api.put(`/admin/leave/${leaveId}/${action}`, {}).catch(() => ({ error: true }));
+    const res = await api.put(`/api/admin/leave/${leaveId}/${action}`, {}).catch(() => ({ error: true }));
     if (res?.id) { toast(`Leave ${action}d!`, 'success'); load(); }
     else toast('Action failed', 'error');
   };
@@ -377,7 +377,7 @@ function DocumentsTab({ studentId, toast }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api.get(`/admin/students/${studentId}/documents`)
+    api.get(`/api/admin/students/${studentId}/documents`)
       .then(d => { if (Array.isArray(d)) setDocuments(d); })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -386,21 +386,21 @@ function DocumentsTab({ studentId, toast }) {
   useEffect(() => { load(); }, [load]);
 
   const verify = async (docId) => {
-    const res = await api.put(`/admin/documents/${docId}/verify`, {}).catch(() => ({ error: true }));
+    const res = await api.put(`/api/admin/documents/${docId}/verify`, {}).catch(() => ({ error: true }));
     if (res?.id) { toast('Document verified!', 'success'); load(); }
     else toast('Verify failed', 'error');
   };
 
   const reject = async () => {
     if (!rejectModal) return;
-    const res = await api.put(`/admin/documents/${rejectModal}/reject`, { adminNote: rejectNote }).catch(() => ({ error: true }));
+    const res = await api.put(`/api/admin/documents/${rejectModal}/reject`, { adminNote: rejectNote }).catch(() => ({ error: true }));
     if (res?.id) { toast('Document rejected', 'success'); setRejectModal(null); setRejectNote(''); load(); }
     else toast('Reject failed', 'error');
   };
 
   const download = async (doc) => {
     try {
-      const blob = await api.download(`/admin/documents/${doc.id}/download`);
+      const blob = await api.download(`/api/admin/documents/${doc.id}/download`);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = doc.originalFilename || 'document';
@@ -502,7 +502,7 @@ export default function StudentProfileModal({ student, onClose, toast }) {
   useEffect(() => {
     if (!student) return;
     setLoading(true);
-    api.get(`/admin/students/${student.id}/profile`)
+    api.get(`/api/admin/students/${student.id}/profile`)
       .then(d => { setProfile(d); })
       .catch(() => toast('Failed to load profile', 'error'))
       .finally(() => setLoading(false));

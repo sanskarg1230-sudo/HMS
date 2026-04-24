@@ -53,7 +53,7 @@ function RoomsTab({ toast, rooms, students, refreshRooms, refreshStudents }) {
 
   const addRoom = async (e) => {
     e.preventDefault();
-    const res = await api.post('/admin/rooms', { ...form, capacity: Number(form.capacity) });
+    const res = await api.post('/api/admin/rooms', { ...form, capacity: Number(form.capacity) });
     if (res.id) { toast('Room added!', 'success'); setShowForm(false); setForm({ roomNumber: '', type: 'SINGLE', capacity: 1, isAC: false }); refreshRooms(); }
   };
 
@@ -72,13 +72,13 @@ function RoomsTab({ toast, rooms, students, refreshRooms, refreshStudents }) {
 
   const deleteRoom = async (id) => {
     try {
-      const r = await api.delete(`/admin/rooms/${id}`);
+      const r = await api.delete(`/api/admin/rooms/${id}`);
       if (r.message && !r.error) { toast(r.message, 'success'); refreshRooms(); }
       else toast(r.message || 'Cannot delete occupied room', 'error');
     } catch (e) { toast('Error deleting room', 'error'); }
   };
   const assignRoom = async (roomId, studentId) => {
-    const r = await api.post(`/admin/rooms/${roomId}/assign/${studentId}`);
+    const r = await api.post(`/api/admin/rooms/${roomId}/assign/${studentId}`);
     if (r.message && !r.error) {
       toast(r.message, 'success'); refreshRooms(); refreshStudents(); setAssigningRoom(null);
     } else {
@@ -130,7 +130,7 @@ function RoomsTab({ toast, rooms, students, refreshRooms, refreshStudents }) {
           e.preventDefault();
           const finalForm = { ...form };
           if (form.type === 'CUSTOM' && form.customType) finalForm.type = form.customType;
-          api.post('/admin/rooms', { ...finalForm, capacity: Number(form.capacity) }).then(res => {
+          api.post('/api/admin/rooms', { ...finalForm, capacity: Number(form.capacity) }).then(res => {
             if (res.id) { toast('Room added!', 'success'); setShowForm(false); setForm({ roomNumber: '', type: 'SINGLE', capacity: 1, isAC: false }); refreshRooms(); }
           });
         }} className="mb-6 p-5 bg-surface-container-low rounded-2xl flex flex-wrap gap-4 items-end border border-primary/10">
@@ -345,7 +345,7 @@ function StudentsTab({ toast, students, rooms, refresh, hostels = [], selectedHo
   const [changingRoom, setChangingRoom] = useState(null); // studentId being reassigned
 
   useEffect(() => { loadInvites(); }, []);
-  const loadInvites = () => api.get('/admin/students/invites').then(setInvites).catch(() => { });
+  const loadInvites = () => api.get('/api/admin/students/invites').then(setInvites).catch(() => { });
 
   const handleRefresh = () => {
     refresh();
@@ -356,7 +356,7 @@ function StudentsTab({ toast, students, rooms, refresh, hostels = [], selectedHo
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await api.post('/admin/students/invite', {
+      const res = await api.post('/api/admin/students/invite', {
         ...inviteForm,
         hostelId: inviteForm.hostelId ? Number(inviteForm.hostelId) : null,
         roomId: inviteForm.roomId ? Number(inviteForm.roomId) : null,
@@ -377,13 +377,13 @@ function StudentsTab({ toast, students, rooms, refresh, hostels = [], selectedHo
   };
 
   const cancelInvite = async (id) => {
-    const res = await api.delete(`/admin/students/invites/${id}`);
+    const res = await api.delete(`/api/admin/students/invites/${id}`);
     if (res.message) { toast(res.message, 'success'); handleRefresh(); }
   };
 
   const reassignRoom = async (studentId, roomId) => {
     if (!roomId) return;
-    const res = await api.post(`/admin/rooms/${roomId}/assign/${studentId}`);
+    const res = await api.post(`/api/admin/rooms/${roomId}/assign/${studentId}`);
     if (res.message && !res.error) {
       toast('Room updated!', 'success');
       handleRefresh();
@@ -395,7 +395,7 @@ function StudentsTab({ toast, students, rooms, refresh, hostels = [], selectedHo
 
   const deleteStudent = async (id) => {
     if (!window.confirm('Are you sure you want to delete this student? This cannot be undone.')) return;
-    const res = await api.delete(`/admin/students/${id}`);
+    const res = await api.delete(`/api/admin/students/${id}`);
     if (res.message && !res.error) {
       toast(res.message, 'success');
       handleRefresh();
@@ -587,17 +587,17 @@ function FeesTab({ toast, students }) {
   const [form, setForm] = useState({ studentId: '', studentName: '', amount: '', month: '', year: new Date().getFullYear(), currency: 'INR' });
 
   useEffect(() => { load(); }, []);
-  const load = () => api.get('/admin/fees').then(setFees).catch(() => { });
+  const load = () => api.get('/api/admin/fees').then(setFees).catch(() => { });
   const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
   const addFee = async (e) => {
     e.preventDefault();
     const s = students.find(s => String(s.id) === String(form.studentId));
-    const res = await api.post('/admin/fees', { ...form, studentName: s?.name || '', amount: Number(form.amount), year: Number(form.year), studentId: Number(form.studentId) });
+    const res = await api.post('/api/admin/fees', { ...form, studentName: s?.name || '', amount: Number(form.amount), year: Number(form.year), studentId: Number(form.studentId) });
     if (res.id) { toast('Fee record added!', 'success'); setShowForm(false); load(); }
   };
   const markPaid = async (id) => {
-    const res = await api.post(`/admin/fees/${id}/mark-paid`);
+    const res = await api.post(`/api/admin/fees/${id}/mark-paid`);
     if (res.id) { toast('Marked as paid!', 'success'); load(); }
   };
 
@@ -679,10 +679,10 @@ function FeesTab({ toast, students }) {
 function ComplaintsTab({ toast }) {
   const [complaints, setComplaints] = useState([]);
   const [filter, setFilter] = useState('ALL');
-  useEffect(() => { api.get('/admin/complaints').then(setComplaints).catch(() => { }); }, []);
+  useEffect(() => { api.get('/api/admin/complaints').then(setComplaints).catch(() => { }); }, []);
 
   const resolve = async (id) => {
-    const res = await api.post(`/admin/complaints/${id}/resolve`);
+    const res = await api.post(`/api/admin/complaints/${id}/resolve`);
     if (res.id) { toast('Complaint resolved!', 'success'); setComplaints(p => p.map(c => c.id === id ? res : c)); }
   };
 
@@ -729,15 +729,15 @@ function NoticesTab({ toast }) {
   const [form, setForm] = useState({ title: '', message: '', isPinned: false });
 
   useEffect(() => { load(); }, []);
-  const load = () => api.get('/admin/notices').then(setNotices).catch(() => { });
+  const load = () => api.get('/api/admin/notices').then(setNotices).catch(() => { });
 
   const saveNotice = async (e) => {
     e.preventDefault();
-    const res = editing ? await api.put(`/admin/notices/${editing.id}`, form) : await api.post('/admin/notices', form);
+    const res = editing ? await api.put(`/api/admin/notices/${editing.id}`, form) : await api.post('/api/admin/notices', form);
     if (res.id) { toast(editing ? 'Notice updated!' : 'Notice published!', 'success'); setShowForm(false); setEditing(null); setForm({ title: '', message: '', isPinned: false }); load(); }
   };
   const deleteNotice = async (id) => {
-    await api.delete(`/admin/notices/${id}`);
+    await api.delete(`/api/admin/notices/${id}`);
     toast('Notice deleted', 'success'); load();
   };
   const startEdit = (n) => { setEditing(n); setForm({ title: n.title, message: n.message, isPinned: n.isPinned }); setShowForm(true); };
@@ -801,11 +801,11 @@ function HostelSettingsTab({ toast }) {
   const [form, setForm] = useState({});
   const [editing, setEditing] = useState(false);
 
-  useEffect(() => { api.get('/admin/hostel').then(h => { setHostel(h); setForm(h); }).catch(() => { }); }, []);
+  useEffect(() => { api.get('/api/admin/hostel').then(h => { setHostel(h); setForm(h); }).catch(() => { }); }, []);
 
   const save = async (e) => {
     e.preventDefault();
-    const res = await api.put('/admin/hostel', form);
+    const res = await api.put('/api/admin/hostel', form);
     if (res.id) { setHostel(res); setEditing(false); toast('Hostel info updated!', 'success'); }
   };
 
@@ -850,7 +850,7 @@ function LogsTab() {
   const [logs, setLogs] = useState([]);
   const [activeFilter, setActiveFilter] = useState('ADMIN'); // 'ADMIN' or 'STUDENT'
   useEffect(() => { loadLogs(); }, []);
-  const loadLogs = () => api.get('/admin/logs').then(setLogs).catch(() => { });
+  const loadLogs = () => api.get('/api/admin/logs').then(setLogs).catch(() => { });
 
   const filteredLogs = logs.filter(l => l.source === activeFilter);
 
@@ -944,13 +944,13 @@ function AdminDashboard() {
   const [pendingComplaints, setPendingComplaints] = useState(0);
   const [selectedHostelId, setSelectedHostelId] = useState(localStorage.getItem('hms_hostel_id') || '');
 
-  const loadRooms = () => api.get('/admin/rooms').then(setRooms).catch(() => { });
-  const loadStudents = () => api.get('/admin/students').then(setStudents).catch(() => { });
-  const loadComplaints = () => api.get('/admin/complaints').then(data => {
+  const loadRooms = () => api.get('/api/admin/rooms').then(setRooms).catch(() => { });
+  const loadStudents = () => api.get('/api/admin/students').then(setStudents).catch(() => { });
+  const loadComplaints = () => api.get('/api/admin/complaints').then(data => {
     if (Array.isArray(data)) setPendingComplaints(data.filter(c => c.status === 'OPEN').length);
   }).catch(() => { });
 
-  const loadHostels = () => api.get('/admin/hostels').then(data => {
+  const loadHostels = () => api.get('/api/admin/hostels').then(data => {
     setHostels(data);
     if (!localStorage.getItem('hms_hostel_id') && data.length > 0) {
       const firstId = String(data[0].id);

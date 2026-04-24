@@ -10,7 +10,7 @@ export default function MessMenuTab({ api }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get('/mess/menu').then(data => {
+    api.get('/api/mess/menu').then(data => {
       setMenu(data);
       setLoading(false);
     }).catch(() => setLoading(false));

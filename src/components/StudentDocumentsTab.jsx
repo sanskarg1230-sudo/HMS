@@ -31,7 +31,7 @@ export default function StudentDocumentsTab({ toast }) {
 
   const load = useCallback(() => {
     setLoading(true);
-    api.get('/student/documents')
+    api.get('/api/student/documents')
       .then(d => { if (Array.isArray(d)) setDocuments(d); })
       .catch(() => {})
       .finally(() => setLoading(false));
@@ -50,7 +50,7 @@ export default function StudentDocumentsTab({ toast }) {
     form.append('documentType', type);
     form.append('file', file);
     try {
-      const res = await api.upload('/student/documents/upload', form);
+      const res = await api.upload('/api/student/documents/upload', form);
       if (res && res.id) { toast('Document uploaded successfully!', 'success'); load(); }
       else toast(res?.message || 'Upload failed', 'error');
     } catch { toast('Upload failed', 'error'); }
@@ -59,7 +59,7 @@ export default function StudentDocumentsTab({ toast }) {
 
   const downloadDoc = async (doc) => {
     try {
-      const blob = await api.download(`/student/documents/${doc.id}/download`);
+      const blob = await api.download(`/api/student/documents/${doc.id}/download`);
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url; a.download = doc.originalFilename || 'document';

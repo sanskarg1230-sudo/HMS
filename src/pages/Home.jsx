@@ -74,7 +74,7 @@ function Home() {
     setErrors({});
     setSubmitting(true);
     try {
-      const res = await fetch(`${API}/contact`, {
+      const res = await fetch(`${API}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

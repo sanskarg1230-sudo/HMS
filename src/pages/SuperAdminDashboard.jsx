@@ -36,7 +36,7 @@ function ContactMessagesTab({ token, showToast }) {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${BASE}/contact/messages`, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${BASE}/api/contact/messages`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setMessages(data);
     } catch { }
@@ -47,7 +47,7 @@ function ContactMessagesTab({ token, showToast }) {
 
   const updateStatus = async (id, status, shouldClose = false) => {
     try {
-      const res = await fetch(`${BASE}/contact/${id}/status`, {
+      const res = await fetch(`${BASE}/api/contact/${id}/status`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -202,7 +202,7 @@ function BugReportsTab({ token, showToast }) {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${BASE}/bugs`, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${BASE}/api/bugs`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setBugs(data);
     } catch { }
@@ -213,7 +213,7 @@ function BugReportsTab({ token, showToast }) {
 
   const updateStatus = async (id, status, shouldClose = false) => {
     try {
-      const res = await fetch(`${BASE}/bugs/${id}/status`, {
+      const res = await fetch(`${BASE}/api/bugs/${id}/status`, {
         method: 'PUT',
         headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
@@ -423,7 +423,7 @@ function SuperAdminDashboard() {
   const loadRequests = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${BASE}/admin-requests`, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await fetch(`${BASE}/api/admin-requests`, { headers: { Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (Array.isArray(data)) setRequests(data);
     } catch { }
@@ -435,7 +435,7 @@ function SuperAdminDashboard() {
     setLoginError('');
     setLogging(true);
     try {
-      const res = await fetch(`${BASE}/auth/login`, {
+      const res = await fetch(`${BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginForm),

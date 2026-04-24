@@ -19,7 +19,7 @@ function ActivateAccount() {
   useEffect(() => {
     const validateToken = async () => {
       try {
-        const data = await api.get(`/auth/invite/validate/${token}`);
+        const data = await api.get(`/api/auth/invite/validate/${token}`);
         if (data.error) {
           setError(data.message || 'Invalid or expired invitation.');
         } else {
@@ -49,7 +49,7 @@ function ActivateAccount() {
 
     setSubmitting(true);
     try {
-      const res = await api.post('/auth/activate', { token, password });
+      const res = await api.post('/api/auth/activate', { token, password });
       if (res.message && !res.error) {
         setSuccess(true);
         setTimeout(() => navigate('/login'), 3000);

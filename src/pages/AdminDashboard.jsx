@@ -944,13 +944,14 @@ function AdminDashboard() {
   const [pendingComplaints, setPendingComplaints] = useState(0);
   const [selectedHostelId, setSelectedHostelId] = useState(localStorage.getItem('hms_hostel_id') || '');
 
-  const loadRooms = () => api.get('/api/admin/rooms').then(setRooms).catch(() => { });
-  const loadStudents = () => api.get('/api/admin/students').then(setStudents).catch(() => { });
+  const loadRooms = () => api.get('/api/admin/rooms').then(data => { if (Array.isArray(data)) setRooms(data); }).catch(() => { });
+  const loadStudents = () => api.get('/api/admin/students').then(data => { if (Array.isArray(data)) setStudents(data); }).catch(() => { });
   const loadComplaints = () => api.get('/api/admin/complaints').then(data => {
     if (Array.isArray(data)) setPendingComplaints(data.filter(c => c.status === 'OPEN').length);
   }).catch(() => { });
 
   const loadHostels = () => api.get('/api/admin/hostels').then(data => {
+    if (!Array.isArray(data)) return; // guard against 403/error objects
     setHostels(data);
     if (!localStorage.getItem('hms_hostel_id') && data.length > 0) {
       const firstId = String(data[0].id);

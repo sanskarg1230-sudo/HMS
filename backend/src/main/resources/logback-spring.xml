@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- ═══════════════════════════════════════════════════
+         HMS Logback Configuration
+         Dev  profile → console only
+         Prod profile → rolling file per category
+         ═══════════════════════════════════════════════════ -->
+
+    <!-- ── Appenders ──────────────────────────────────── -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{30} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Production: general application log (rolling daily, 30-day retention) -->
+    <springProfile name="prod">
+        <appender name="APP_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>logs/hms-app.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>logs/hms-app.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>30</maxHistory>
+                <totalSizeCap>500MB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <!-- Production: dedicated security audit log (90-day retention — longer for forensics) -->
+        <appender name="SECURITY_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>logs/hms-security.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <fileNamePattern>logs/hms-security.%d{yyyy-MM-dd}.log</fileNamePattern>
+                <maxHistory>90</maxHistory>
+                <totalSizeCap>200MB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <!-- Plain format — easy to grep / parse -->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>
+            </encoder>
+        </appender>
+
+        <!-- ── Named loggers for each category ────────── -->
+        <logger name="HMS_AUTH" level="INFO" additivity="false">
+            <appender-ref ref="SECURITY_FILE"/>
+            <appender-ref ref="APP_FILE"/>
+        </logger>
+
+        <logger name="HMS_SECURITY" level="WARN" additivity="false">
+            <appender-ref ref="SECURITY_FILE"/>
+            <appender-ref ref="APP_FILE"/>
+        </logger>
+
+        <logger name="HMS_API" level="ERROR" additivity="false">
+            <appender-ref ref="SECURITY_FILE"/>
+            <appender-ref ref="APP_FILE"/>
+        </logger>
+
+        <logger name="HMS_REQUEST" level="INFO" additivity="false">
+            <appender-ref ref="APP_FILE"/>
+        </logger>
+
+        <!-- Suppress noisy framework loggers in prod -->
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+        <logger name="com.zaxxer.hikari" level="WARN"/>
+
+        <root level="WARN">
+            <appender-ref ref="APP_FILE"/>
+        </root>
+    </springProfile>
+
+    <!-- ── Development: everything to console ─────────── -->
+    <springProfile name="!prod">
+        <logger name="HMS_AUTH" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="HMS_SECURITY" level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="HMS_API" level="ERROR" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <logger name="HMS_REQUEST" level="INFO" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+        </logger>
+
+        <!-- Show HMS app code at DEBUG in dev -->
+        <logger name="com.hms" level="DEBUG"/>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
+</configuration>

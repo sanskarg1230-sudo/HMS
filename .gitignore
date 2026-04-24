@@ -1,0 +1,39 @@
+# ──────────────────────────────────────────────────────
+# HMS Project – Git Ignore Rules
+# ──────────────────────────────────────────────────────
+
+# ── Secrets & Environment files ───────────────────────
+.env
+.env.*
+!*.env.example
+
+backend/src/main/resources/application-prod.properties
+
+# ── Java / Maven build output ─────────────────────────
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+out/
+
+# ── Node / React frontend ─────────────────────────────
+node_modules/
+dist/
+build/
+
+# ── IDE files ─────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.project
+*.classpath
+.settings/
+
+# ── OS files ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ──────────────────────────────────────────────
+logs/
+*.log

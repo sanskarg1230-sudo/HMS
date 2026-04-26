@@ -2,12 +2,24 @@ import API from '../config/api';
 
 const BASE = API;
 
-const getToken = () => localStorage.getItem('hms_token');
+export const getAuthItem = (key) => sessionStorage.getItem(key) || localStorage.getItem(key);
+
+export const setAuthItem = (key, value) => {
+  if (sessionStorage.getItem('hms_token')) sessionStorage.setItem(key, value);
+  else localStorage.setItem(key, value);
+};
+
+export const removeAuthItem = (key) => {
+  sessionStorage.removeItem(key);
+  localStorage.removeItem(key);
+};
+
+const getToken = () => getAuthItem('hms_token');
 
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}),
-  ...(localStorage.getItem('hms_hostel_id') ? { 'X-Hostel-Id': localStorage.getItem('hms_hostel_id') } : {}),
+  ...(getAuthItem('hms_hostel_id') ? { 'X-Hostel-Id': getAuthItem('hms_hostel_id') } : {}),
 });
 
 const handleResponse = async (r) => {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../utils/api';
+import { api, getAuthItem, setAuthItem, removeAuthItem } from '../utils/api';
 import ScrollReveal from '../components/ScrollReveal';
 import Footer from '../components/Footer';
 import MessMenuTab from '../components/MessMenuTab';
@@ -338,7 +338,7 @@ function ProfileTab({ toast }) {
 
   const saveName = async () => {
     const res = await api.patch('/api/student/profile', { name });
-    if (res.id) { setProfile(res); setEditName(false); localStorage.setItem('hms_name', res.name); toast('Name updated!', 'success'); }
+    if (res.id) { setProfile(res); setEditName(false); setAuthItem('hms_name', res.name); toast('Name updated!', 'success'); }
   };
 
   const changePassword = async (e) => {
@@ -552,8 +552,8 @@ function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('room');
   const [toastMsg, setToastMsg] = useState(null);
 
-  const studentEmail = localStorage.getItem('hms_email');
-  const studentId = localStorage.getItem('hms_user_id');
+  const studentEmail = getAuthItem('hms_email');
+  const studentId = getAuthItem('hms_user_id');
 
   const showToast = (msg, type = 'success') => {
     setToastMsg({ msg, type });
@@ -561,7 +561,7 @@ function StudentDashboard() {
   };
 
   const logout = () => {
-    ['hms_token', 'hms_role', 'hms_email', 'hms_name'].forEach(k => localStorage.removeItem(k));
+    ['hms_token', 'hms_role', 'hms_email', 'hms_name', 'hms_user_id'].forEach(k => removeAuthItem(k));
     navigate('/');
   };
 

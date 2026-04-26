@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { api } from '../utils/api';
+import { api, getAuthItem, setAuthItem, removeAuthItem } from '../utils/api';
 import ScrollReveal from '../components/ScrollReveal';
 import Footer from '../components/Footer';
 import MessTab from '../components/MessTab';
@@ -931,9 +931,9 @@ function AdminDashboard() {
   const [toast, setToastMsg] = useState(null);
   const [profileStudent, setProfileStudent] = useState(null);
 
-  const adminEmail = localStorage.getItem('hms_email');
-  const adminName = localStorage.getItem('hms_name') || 'Admin';
-  const adminId = localStorage.getItem('hms_user_id');
+  const adminEmail = getAuthItem('hms_email');
+  const adminName = getAuthItem('hms_name') || 'Admin';
+  const adminId = getAuthItem('hms_user_id');
 
   const showToast = (msg, type = 'success') => {
     setToastMsg({ msg, type });
@@ -944,7 +944,7 @@ function AdminDashboard() {
   const [students, setStudents] = useState([]);
   const [hostels, setHostels] = useState([]);
   const [pendingComplaints, setPendingComplaints] = useState(0);
-  const [selectedHostelId, setSelectedHostelId] = useState(localStorage.getItem('hms_hostel_id') || '');
+  const [selectedHostelId, setSelectedHostelId] = useState(getAuthItem('hms_hostel_id') || '');
 
   const loadRooms = () => api.get('/api/admin/rooms').then(data => { if (Array.isArray(data)) setRooms(data); }).catch(() => { });
   const loadStudents = () => api.get('/api/admin/students').then(data => { if (Array.isArray(data)) setStudents(data); }).catch(() => { });
@@ -955,17 +955,17 @@ function AdminDashboard() {
   const loadHostels = () => api.get('/api/admin/hostels').then(data => {
     if (!Array.isArray(data)) return; // guard against 403/error objects
     setHostels(data);
-    if (!localStorage.getItem('hms_hostel_id') && data.length > 0) {
+    if (!getAuthItem('hms_hostel_id') && data.length > 0) {
       const firstId = String(data[0].id);
       setSelectedHostelId(firstId);
-      localStorage.setItem('hms_hostel_id', firstId);
+      setAuthItem('hms_hostel_id', firstId);
     }
   }).catch(() => { });
 
   // Reactive hostel switch — update localStorage and reload all data without page refresh
   const changeHostel = (id) => {
     setSelectedHostelId(id);
-    localStorage.setItem('hms_hostel_id', id);
+    setAuthItem('hms_hostel_id', id);
     loadRooms();
     loadStudents();
     loadComplaints();
@@ -984,11 +984,11 @@ function AdminDashboard() {
   const occupiedRooms = rooms.filter(r => r.occupantCount > 0).length;
 
   const logout = () => {
-    localStorage.removeItem('hms_token');
-    localStorage.removeItem('hms_role');
-    localStorage.removeItem('hms_email');
-    localStorage.removeItem('hms_name');
-    localStorage.removeItem('hms_hostel_id');
+    removeAuthItem('hms_token');
+    removeAuthItem('hms_role');
+    removeAuthItem('hms_email');
+    removeAuthItem('hms_name');
+    removeAuthItem('hms_hostel_id');
     navigate('/');
   };
 

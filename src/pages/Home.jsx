@@ -143,10 +143,10 @@ function Home() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
-                { val: '2.5k+', label: 'Students' },
-                { val: '120+',  label: 'Rooms Available' },
-                { val: '98%',   label: 'Issues Resolved' },
-                { val: '$1.2M', label: 'Processed' },
+                { val: '50+', label: 'Hostels Using HMS' },
+                { val: '2500+', label: 'Students Managed' },
+                { val: '120+', label: 'Rooms Managed' },
+                { val: '350+', label: 'Issues Resolved' },
               ].map(({ val, label }) => (
                 <div key={label} className="p-8 bg-surface-container-lowest rounded-2xl text-center shadow-sm">
                   <div className="text-4xl font-extrabold text-primary mb-2">{val}</div>
@@ -199,9 +199,9 @@ function Home() {
                 </p>
                 <div className="space-y-6">
                   {[
-                    { icon: 'mail',        title: 'Email Us',       detail: 'support@hms.edu' },
-                    { icon: 'call',        title: 'Call Center',    detail: '+1 (555) 000-HMS1' },
-                    { icon: 'location_on', title: 'Headquarters',   detail: '123 Campus Way, Education District, NY' },
+                    { icon: 'mail', title: 'Email Us', detail: 'noreply.support.hms@gmail.com' },
+                    { icon: 'call', title: 'Call Us', detail: '+91 9238825025' },
+                    { icon: 'location_on', title: 'Headquarters', detail: 'Symbiosis University Of Applied Sciences , Indore, Madhya Pradesh, India' },
                   ].map(({ icon, title, detail }) => (
                     <div key={icon} className="flex items-start gap-4">
                       <div className="w-10 h-10 bg-primary-container/20 text-primary rounded-lg flex items-center justify-center shrink-0">

@@ -19,6 +19,7 @@ function Login() {
   const [showForgotModel, setShowForgotModel] = useState(false);
   const [forgotEmail, setForgotEmail] = useState('');
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleForgot = async (e) => {
     e.preventDefault();
@@ -82,12 +83,13 @@ function Login() {
         return;
       }
 
-      // ✅ Save JWT and user info to localStorage for authenticated API calls
+      // ✅ Save JWT and user info to selected storage for authenticated API calls
       if (data.token) {
-        localStorage.setItem('hms_token', data.token);
-        localStorage.setItem('hms_role', data.role);
-        localStorage.setItem('hms_email', email);
-        if (!isLogin && name) localStorage.setItem('hms_name', name);
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem('hms_token', data.token);
+        storage.setItem('hms_role', data.role);
+        storage.setItem('hms_email', email);
+        if (!isLogin && name) storage.setItem('hms_name', name);
       }
 
       // ✅ Redirect based on role
@@ -189,7 +191,7 @@ function Login() {
               {/* Remember Me / Forgot Password */}
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" />
+                  <input type="checkbox" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary/20" />
                   <span className="text-xs font-medium text-on-surface-variant">Remember me</span>
                 </label>
                 <button 

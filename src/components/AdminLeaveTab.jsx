@@ -144,7 +144,7 @@ function CreateLeaveModal({ students, onClose, onSuccess, toast }) {
 }
 
 // ── Main Admin Leave Tab ───────────────────────────────────────────────────────
-export default function AdminLeaveTab({ toast, students }) {
+export default function AdminLeaveTab({ toast, students, rooms = [] }) {
   const [leaves, setLeaves] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -155,14 +155,41 @@ export default function AdminLeaveTab({ toast, students }) {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
+  // Fan-out: fetch leave records for every student in parallel, then merge + enrich
   const load = useCallback(() => {
+    if (!students || students.length === 0) {
+      setLeaves([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
-    // Try the all-leaves endpoint; fall back to fetching per student via individual calls
-    api.get('/api/admin/leaves')
-      .then(d => { if (Array.isArray(d)) setLeaves(d); else setLeaves([]); })
-      .catch(() => setLeaves([]))
+    const requests = students.map(s =>
+      api.get(`/api/admin/students/${s.id}/leave`)
+        .then(data => {
+          if (!Array.isArray(data)) return [];
+          // Enrich each record with student name + room number
+          const room = rooms.find(r => r.id === s.roomId);
+          return data.map(leave => ({
+            ...leave,
+            studentName: s.name,
+            studentId: s.id,
+            roomNumber: room?.roomNumber || null,
+          }));
+        })
+        .catch(() => [])
+    );
+    Promise.all(requests)
+      .then(results => {
+        // Flatten + sort newest first
+        const all = results.flat().sort((a, b) => {
+          const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return tb - ta;
+        });
+        setLeaves(all);
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [students, rooms]);
 
   useEffect(() => { load(); }, [load]);
 

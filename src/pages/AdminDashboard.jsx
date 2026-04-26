@@ -999,7 +999,7 @@ function AdminDashboard() {
       case 'fees': return <FeesTab toast={showToast} students={students} />;
       case 'mess': return <MessTab toast={showToast} api={api} />;
       case 'complaints': return <ComplaintsTab toast={showToast} />;
-      case 'leaves': return <AdminLeaveTab toast={showToast} students={students} />;
+      case 'leaves': return <AdminLeaveTab toast={showToast} students={students} rooms={rooms} />;
       case 'notices': return <NoticesTab toast={showToast} />;
       case 'logs': return <LogsTab toast={showToast} />;
       case 'hostel': return <HostelSettingsTab toast={showToast} />;

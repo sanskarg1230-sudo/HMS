@@ -405,7 +405,19 @@ function DocumentsTab({ studentId, toast }) {
       const a = document.createElement('a');
       a.href = url; a.download = doc.originalFilename || 'document';
       a.click(); URL.revokeObjectURL(url);
-    } catch { toast('Download failed', 'error'); }
+    } catch (err) {
+      toast('File missing from server (cloud storage wiped)', 'error');
+    }
+  };
+
+  const viewDoc = async (doc) => {
+    try {
+      const blob = await api.download(`/api/admin/documents/${doc.id}/download`);
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (err) {
+      toast('File missing from server (cloud storage wiped)', 'error');
+    }
   };
 
   return (
@@ -456,6 +468,10 @@ function DocumentsTab({ studentId, toast }) {
                     </div>
                   </div>
                   <div className="flex gap-2 shrink-0">
+                    <button onClick={() => viewDoc(doc)} title="View"
+                      className="p-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest transition-colors">
+                      <span className="material-symbols-outlined text-base text-on-surface-variant">visibility</span>
+                    </button>
                     <button onClick={() => download(doc)} title="Download"
                       className="p-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest transition-colors">
                       <span className="material-symbols-outlined text-base text-on-surface-variant">download</span>

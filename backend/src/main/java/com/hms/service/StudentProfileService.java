@@ -226,14 +226,14 @@ public class StudentProfileService {
 
     public Resource loadDocumentAsResource(Long docId) {
         StudentDocument doc = documentRepo.findById(docId)
-                .orElseThrow(() -> new RuntimeException("Document not found: " + docId));
+                .orElseThrow(() -> new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "Document not found: " + docId));
         try {
             Path filePath = Paths.get(doc.getFilePath()).normalize();
             Resource resource = new UrlResource(filePath.toUri());
             if (resource.exists()) return resource;
-            throw new RuntimeException("File not found on server: " + doc.getStoredFilename());
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.NOT_FOUND, "File missing from cloud storage: " + doc.getStoredFilename());
         } catch (MalformedURLException e) {
-            throw new RuntimeException("Could not resolve file path", e);
+            throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR, "Invalid file path", e);
         }
     }
 

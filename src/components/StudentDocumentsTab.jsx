@@ -64,7 +64,19 @@ export default function StudentDocumentsTab({ toast }) {
       const a = document.createElement('a');
       a.href = url; a.download = doc.originalFilename || 'document';
       a.click(); URL.revokeObjectURL(url);
-    } catch { toast('Download failed', 'error'); }
+    } catch (err) {
+      toast('File missing from server (cloud storage wiped)', 'error');
+    }
+  };
+
+  const viewDoc = async (doc) => {
+    try {
+      const blob = await api.download(`/api/student/documents/${doc.id}/download`);
+      const url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    } catch (err) {
+      toast('File missing from server (cloud storage wiped)', 'error');
+    }
   };
 
   if (loading) return (
@@ -139,11 +151,18 @@ export default function StudentDocumentsTab({ toast }) {
                 {/* Actions */}
                 <div className="flex items-center gap-2 shrink-0">
                   {doc && (
-                    <button onClick={() => downloadDoc(doc)}
-                      className="p-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest transition-colors"
-                      title="Download">
-                      <span className="material-symbols-outlined text-base text-on-surface-variant">download</span>
-                    </button>
+                    <>
+                      <button onClick={() => viewDoc(doc)}
+                        className="p-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest transition-colors"
+                        title="View">
+                        <span className="material-symbols-outlined text-base text-on-surface-variant">visibility</span>
+                      </button>
+                      <button onClick={() => downloadDoc(doc)}
+                        className="p-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest transition-colors"
+                        title="Download">
+                        <span className="material-symbols-outlined text-base text-on-surface-variant">download</span>
+                      </button>
+                    </>
                   )}
                   <label className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold cursor-pointer transition-all ${isUploading ? 'opacity-60 cursor-wait' : 'bg-secondary text-white hover:bg-secondary/90'}`}>
                     {isUploading

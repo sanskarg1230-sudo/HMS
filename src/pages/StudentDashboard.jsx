@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import MessMenuTab from '../components/MessMenuTab';
 import BugReportModal from '../components/BugReportModal';
 import StudentDocumentsTab from '../components/StudentDocumentsTab';
+import StudentLeaveTab from '../components/StudentLeaveTab';
 
 const Badge = ({ status }) => {
   const colors = { PAID: 'bg-green-100 text-green-700', UNPAID: 'bg-orange-100 text-orange-600', OPEN: 'bg-red-100 text-red-600', RESOLVED: 'bg-green-100 text-green-700' };
@@ -541,6 +542,7 @@ const TABS = [
   { id: 'mess', label: 'Mess Menu', icon: 'restaurant_menu' },
   { id: 'complaints', label: 'Complaints', icon: 'report' },
   { id: 'notices', label: 'Notices', icon: 'campaign' },
+  { id: 'leave', label: 'My Leave', icon: 'flight_takeoff' },
   { id: 'documents', label: 'Documents', icon: 'folder_open' },
   { id: 'profile', label: 'My Profile', icon: 'person' },
 ];
@@ -570,6 +572,7 @@ function StudentDashboard() {
       case 'mess': return <MessMenuTab api={api} />;
       case 'complaints': return <ComplaintsTab toast={showToast} />;
       case 'notices': return <NoticesTab />;
+      case 'leave': return <StudentLeaveTab toast={showToast} />;
       case 'documents': return <StudentDocumentsTab toast={showToast} />;
       case 'profile': return <ProfileTab toast={showToast} />;
       default: return null;
@@ -626,16 +629,22 @@ function StudentDashboard() {
           </div>
         </main>
 
-        {/* Mobile Tab Bar */}
+        {/* Mobile Tab Bar — show 5 primary tabs */}
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant/10 flex md:hidden z-40">
-          {TABS.map(tab => (
+          {[
+            TABS.find(t => t.id === 'room'),
+            TABS.find(t => t.id === 'fees'),
+            TABS.find(t => t.id === 'leave'),
+            TABS.find(t => t.id === 'complaints'),
+            TABS.find(t => t.id === 'profile'),
+          ].filter(Boolean).map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex-1 py-3 flex flex-col items-center gap-0.5 text-[9px] font-bold ${activeTab === tab.id ? 'text-secondary' : 'text-on-surface-variant'}`}
             >
               <span className="material-symbols-outlined text-xl">{tab.icon}</span>
-              {tab.label}
+              {tab.label === 'My Leave' ? 'Leave' : tab.label}
             </button>
           ))}
         </div>

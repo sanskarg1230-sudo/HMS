@@ -6,6 +6,7 @@ import Footer from '../components/Footer';
 import MessTab from '../components/MessTab';
 import BugReportModal from '../components/BugReportModal';
 import StudentProfileModal from '../components/StudentProfileModal';
+import AdminLeaveTab from '../components/AdminLeaveTab';
 
 // ── Reusable UI Primitives ─────────────────────────────────────────────────────
 
@@ -918,6 +919,7 @@ const TABS = [
   { id: 'fees', label: 'Fees', icon: 'payments' },
   { id: 'mess', label: 'Mess Management', icon: 'restaurant_menu' },
   { id: 'complaints', label: 'Complaints', icon: 'report' },
+  { id: 'leaves', label: 'Leave Management', icon: 'event_available' },
   { id: 'notices', label: 'Notices', icon: 'campaign' },
   { id: 'logs', label: 'Activity Logs', icon: 'history' },
   { id: 'hostel', label: 'Hostel Settings', icon: 'apartment' },
@@ -997,6 +999,7 @@ function AdminDashboard() {
       case 'fees': return <FeesTab toast={showToast} students={students} />;
       case 'mess': return <MessTab toast={showToast} api={api} />;
       case 'complaints': return <ComplaintsTab toast={showToast} />;
+      case 'leaves': return <AdminLeaveTab toast={showToast} students={students} />;
       case 'notices': return <NoticesTab toast={showToast} />;
       case 'logs': return <LogsTab toast={showToast} />;
       case 'hostel': return <HostelSettingsTab toast={showToast} />;

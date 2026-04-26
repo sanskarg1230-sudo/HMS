@@ -636,7 +636,7 @@ function FeesTab({ toast, students }) {
           </div>
           <div>
             <label className="block text-xs font-bold text-on-surface-variant mb-1">Currency</label>
-            <select className="px-3 py-2 bg-surface-container-lowest rounded-lg text-sm outline-none border border-outline-variant/20 w-24" value={form.currency} onChange={e => setForm(p => ({...p, currency: e.target.value}))}>
+            <select className="px-3 py-2 bg-surface-container-lowest rounded-lg text-sm outline-none border border-outline-variant/20 w-24" value={form.currency} onChange={e => setForm(p => ({ ...p, currency: e.target.value }))}>
               <option value="INR">INR (₹)</option>
               <option value="USD">USD ($)</option>
               <option value="EUR">EUR (€)</option>
@@ -645,7 +645,7 @@ function FeesTab({ toast, students }) {
           </div>
           <div>
             <label className="block text-xs font-bold text-on-surface-variant mb-1">Amount</label>
-            <input type="number" className="px-3 py-2 bg-surface-container-lowest rounded-lg text-sm outline-none border border-outline-variant/20 w-32" value={form.amount} onChange={e => setForm(p => ({...p, amount: e.target.value}))} placeholder="2000" />
+            <input type="number" className="px-3 py-2 bg-surface-container-lowest rounded-lg text-sm outline-none border border-outline-variant/20 w-32" value={form.amount} onChange={e => setForm(p => ({ ...p, amount: e.target.value }))} placeholder="2000" />
           </div>
           <button type="submit" className="px-5 py-2 bg-primary text-white text-sm font-bold rounded-xl">Save</button>
           <button type="button" onClick={() => setShowForm(false)} className="px-5 py-2 bg-surface-container text-on-surface text-sm font-bold rounded-xl">Cancel</button>
@@ -917,9 +917,9 @@ const TABS = [
   { id: 'rooms', label: 'Rooms', icon: 'bed' },
   { id: 'students', label: 'Students', icon: 'people' },
   { id: 'fees', label: 'Fees', icon: 'payments' },
-  { id: 'mess', label: 'Mess Management', icon: 'restaurant_menu' },
+  { id: 'mess', label: 'Mess', icon: 'restaurant_menu' },
   { id: 'complaints', label: 'Complaints', icon: 'report' },
-  { id: 'leaves', label: 'Leave Management', icon: 'event_available' },
+  { id: 'leaves', label: 'Leave Requests', icon: 'event_available' },
   { id: 'notices', label: 'Notices', icon: 'campaign' },
   { id: 'logs', label: 'Activity Logs', icon: 'history' },
   { id: 'hostel', label: 'Hostel Settings', icon: 'apartment' },

@@ -629,24 +629,26 @@ function StudentDashboard() {
           </div>
         </main>
 
-        {/* Mobile Tab Bar — show 5 primary tabs */}
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant/10 flex md:hidden z-40">
-          {[
-            TABS.find(t => t.id === 'room'),
-            TABS.find(t => t.id === 'fees'),
-            TABS.find(t => t.id === 'leave'),
-            TABS.find(t => t.id === 'complaints'),
-            TABS.find(t => t.id === 'profile'),
-          ].filter(Boolean).map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 flex flex-col items-center gap-0.5 text-[9px] font-bold ${activeTab === tab.id ? 'text-secondary' : 'text-on-surface-variant'}`}
-            >
-              <span className="material-symbols-outlined text-xl">{tab.icon}</span>
-              {tab.label === 'My Leave' ? 'Leave' : tab.label}
-            </button>
-          ))}
+        {/* Mobile Tab Bar — horizontally scrollable, all tabs */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant/10 md:hidden z-40 overflow-x-auto">
+          <div className="flex min-w-max">
+            {TABS.map(tab => {
+              const shortLabel = {
+                'My Room': 'Room', 'My Fees': 'Fees', 'Mess Menu': 'Mess',
+                'My Leave': 'Leave', 'My Profile': 'Profile', 'Activity Logs': 'Logs',
+              }[tab.label] || tab.label;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex flex-col items-center justify-center gap-0.5 px-4 py-3 text-[9px] font-bold whitespace-nowrap shrink-0 ${activeTab === tab.id ? 'text-secondary' : 'text-on-surface-variant'}`}
+                >
+                  <span className="material-symbols-outlined text-xl">{tab.icon}</span>
+                  {shortLabel}
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
       <Footer />

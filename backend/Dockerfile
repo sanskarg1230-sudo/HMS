@@ -33,4 +33,4 @@ EXPOSE 8080
 # - HMS_UPLOADS_DIR
 
 # Start the application
-ENTRYPOINT ["java", "-jar", "app.jar","--server.port=${PORT}"]
+ENTRYPOINT ["sh","-c","java -jar app.jar --server.port=${PORT}"]

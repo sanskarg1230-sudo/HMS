@@ -1,7 +1,10 @@
 package com.hms.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -11,16 +14,32 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailService {
 
+    private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+
     private final JavaMailSender mailSender;
 
     @Value("${spring.mail.username}")
     private String fromEmail;
+
+    @PostConstruct
+    public void checkMailConfig() {
+        log.info("========== MAIL CONFIGURATION CHECK ==========");
+        log.info("[MAIL] fromEmail = {}", fromEmail != null && !fromEmail.isBlank()
+                ? fromEmail.replaceAll("(?<=.{3}).(?=.*@)", "*") : "⚠ EMPTY/NULL");
+        log.info("[MAIL] mailSender bean = {}", mailSender != null ? "OK" : "⚠ NULL");
+        log.info("===============================================");
+    }
 
     public void sendEmail(String to, String subject, String body) {
         sendHtmlEmail(to, subject, body);
     }
 
     public void sendHtmlEmail(String to, String subject, String htmlContent) {
+        log.info("[MAIL] Attempting to send email to={}, subject={}", to, subject);
+        if (fromEmail == null || fromEmail.isBlank()) {
+            log.error("[MAIL] ❌ fromEmail is null/blank — HMS_MAIL_USER env var is probably not set!");
+            throw new RuntimeException("Mail sender not configured: fromEmail is empty. Set HMS_MAIL_USER env var.");
+        }
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
@@ -30,11 +49,12 @@ public class EmailService {
             helper.setSubject(subject);
             helper.setText(htmlContent, true); // true = HTML
 
+            long start = System.currentTimeMillis();
             mailSender.send(message);
-            System.out.println(">>> Professional HTML Email sent successfully to " + to);
+            long elapsed = System.currentTimeMillis() - start;
+            log.info("[MAIL] ✅ Email sent successfully to {} (took {}ms)", to, elapsed);
         } catch (Exception e) {
-            System.err.println(">>> ERROR sending HTML email to " + to + ": " + e.getMessage());
-            e.printStackTrace();
+            log.error("[MAIL] ❌ FAILED to send email to {}: {}", to, e.getMessage(), e);
             throw new RuntimeException("Failed to send HTML email: " + e.getMessage());
         }
     }

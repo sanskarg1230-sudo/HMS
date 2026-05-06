@@ -66,6 +66,13 @@ function Navbar() {
           </a>
           <a
             className={`${navLinkBase} text-slate-600 hover:text-primary`}
+            href="#request-admin"
+            onClick={(e) => scrollToSection(e, 'request-admin')}
+          >
+            Request Admin
+          </a>
+          <a
+            className={`${navLinkBase} text-slate-600 hover:text-primary`}
             href="#contact"
             onClick={(e) => scrollToSection(e, 'contact')}
           >
@@ -77,15 +84,9 @@ function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             to="/login?mode=login"
-            className="px-5 py-2 text-sm font-semibold text-primary hover:bg-primary/5 rounded-lg transition-all active:scale-95"
-          >
-            Login
-          </Link>
-          <Link
-            to="/login?mode=register"
             className="px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-primary to-primary-container rounded-xl shadow-sm hover:shadow-md active:scale-95 transition-all"
           >
-            Register
+            Login
           </Link>
         </div>
       </nav>

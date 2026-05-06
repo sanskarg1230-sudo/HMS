@@ -8,6 +8,7 @@ import StudentDashboard from './pages/StudentDashboard';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import ActivateAccount from './pages/ActivateAccount';
 import ResetPassword from './pages/ResetPassword';
+import RegisterHostel from './pages/RegisterHostel';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
 
         {/* Admin Dashboard — standalone, has its own head */}
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+
+        {/* Hostel Registration Onboarding — standalone page */}
+        <Route path="/register-hostel" element={<RegisterHostel />} />
 
         {/* Student Dashboard — standalone, has its own header */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />

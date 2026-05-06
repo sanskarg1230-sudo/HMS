@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import FeaturesSection from '../components/FeaturesSection';
 import AnimatedSection from '../components/AnimatedSection';
 import HomeSkeleton from '../components/HomeSkeleton';
@@ -115,9 +115,9 @@ function Home() {
                 Manage student records, room allocation, complaints, and hostel fees efficiently with our all-in-one digital sanctuary.
               </p>
               <div className="flex flex-wrap gap-4">
-                <button className="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-xl shadow-xl hover:shadow-primary/20 transition-all active:scale-95">
+                <Link to="/register-hostel" className="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-xl shadow-xl hover:shadow-primary/20 transition-all active:scale-95 inline-block text-center">
                   Get Started
-                </button>
+                </Link>
                 <button className="px-8 py-4 bg-surface-container-lowest text-primary border border-outline-variant/20 font-bold rounded-xl shadow-sm hover:bg-surface-container transition-all active:scale-95">
                   Watch Demo
                 </button>
@@ -166,7 +166,7 @@ function Home() {
 
       {/* Hostel Owners CTA */}
       <ScrollReveal direction="up">
-        <section className="py-20 bg-primary-container relative overflow-hidden">
+        <section id="request-admin" className="py-20 bg-primary-container relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
             <span className="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest uppercase text-on-primary-container bg-primary-fixed/20 rounded-full">For Hostel Owners</span>
             <h2 className="text-4xl lg:text-5xl font-extrabold text-on-primary-container mb-8">Start Managing Your Hostel Today</h2>

@@ -133,3 +133,12 @@ h1, h2, h3, h4, h5, h6 {
   );
   background-size: 200% 100%;
 }
+
+/* Hide scrollbar utility */
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hidden-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

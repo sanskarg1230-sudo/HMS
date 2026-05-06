@@ -118,9 +118,9 @@ function Home() {
                 <Link to="/register-hostel" className="px-8 py-4 bg-gradient-to-br from-primary to-primary-container text-white font-bold rounded-xl shadow-xl hover:shadow-primary/20 transition-all active:scale-95 inline-block text-center">
                   Get Started
                 </Link>
-                <button className="px-8 py-4 bg-surface-container-lowest text-primary border border-outline-variant/20 font-bold rounded-xl shadow-sm hover:bg-surface-container transition-all active:scale-95">
+                <Link to="/demo" className="px-8 py-4 bg-surface-container-lowest text-primary border border-outline-variant/20 font-bold rounded-xl shadow-sm hover:bg-surface-container transition-all active:scale-95 inline-block text-center">
                   Watch Demo
-                </button>
+                </Link>
               </div>
             </div>
             <div className="relative group">

@@ -9,6 +9,7 @@ import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import ActivateAccount from './pages/ActivateAccount';
 import ResetPassword from './pages/ResetPassword';
 import RegisterHostel from './pages/RegisterHostel';
+import Demo from './pages/Demo';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
 
         {/* Hostel Registration Onboarding — standalone page */}
         <Route path="/register-hostel" element={<RegisterHostel />} />
+
+        {/* Demo Experience — standalone page */}
+        <Route path="/demo" element={<Demo />} />
 
         {/* Student Dashboard — standalone, has its own header */}
         <Route path="/student/dashboard" element={<StudentDashboard />} />

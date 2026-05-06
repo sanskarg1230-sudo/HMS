@@ -32,22 +32,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        System.out.println("[HMS] Starting database cleanup...");
-
-        // 0. Cleanup - Keep only official Demo/Seed accounts
-        java.util.Set<String> safeEmails = java.util.Set.of(
-            "superadmin@hms.edu", "super@hms.com", 
-            "admin@hms.edu", "admin@hms.com", 
-            "student@hms.edu", "jane@hms.edu"
-        );
-
-        // Delete unknown users
-        userRepository.findAll().stream()
-            .filter(u -> !safeEmails.contains(u.getEmail()))
-            .forEach(u -> {
-                System.out.println("[HMS] Cleaning up test user: " + u.getEmail());
-                userRepository.delete(u);
-            });
+        System.out.println("[HMS] Starting database seeding...");
 
         // 1. Super Admin
         User superAdmin = seedUser("Super Admin", "superadmin@hms.edu", "superadmin123", "super_admin", null, null);

@@ -44,7 +44,7 @@ public class SecurityConfig {
                 // Allow all CORS preflight requests through without authentication
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Public endpoints
-                .requestMatchers(HttpMethod.GET, "/health", "/actuator/health").permitAll()
+                .requestMatchers("/health", "/actuator/health").permitAll()
                 .requestMatchers("/api/auth/**", "/auth/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/admin-request").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
